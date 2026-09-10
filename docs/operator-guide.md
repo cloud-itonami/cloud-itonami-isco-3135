@@ -116,7 +116,7 @@ Replace the `mock-advisor` with your own LLM or domain-specific model:
 
 ### Customize the Governor
 
-The Governor rules are in `src/metal_ops/governor.cljc`. You can fork and customize:
+The Governor rules are in `src/metal_ops/governor.kotoba`. You can fork and customize:
 - Add new escalation operators.
 - Adjust the confidence floor.
 - Add plant-specific safety rules.
