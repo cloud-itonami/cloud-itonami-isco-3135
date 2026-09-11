@@ -34,7 +34,7 @@ The Governor (built into the system) enforces this boundary at every step. Any p
 ```bash
 git clone https://github.com/cloud-itonami/cloud-itonami-isco-3135.git
 cd cloud-itonami-isco-3135
-clojure -M:test
+kbb -M:test
 ```
 
 Ensure all tests pass.
