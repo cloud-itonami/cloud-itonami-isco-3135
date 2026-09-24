@@ -1,0 +1,33 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a telemetry-monitoring robot performs routine
+;; production readings, maintenance scheduling and anomalous-condition
+;; flagging for metal production process controllers (ISCO 3135). Its
+;; physical work is reading furnace shell temperature (which the remaining
+;; refractory lining sets) and handling the melt-sampling lance.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-3135"
+ :cases
+ [{:id :furnace-shell-vs-lining
+   :kind :thermal
+   :procedure "furnace hot face at 1400 C; the robot reads the steel shell after a week, as the refractory wears thinner"
+   :params {:conductivity-w-mk 0.4 :density-kg-m3 1000.0 :specific-heat-j-kgk 1000.0
+            :t0-c 30.0 :t-hot-c 1400.0 :front-fixed? true :t-back-ambient-c 30.0 :h-back-w-m2k 10.0
+            :threshold-c 250.0 :duration-s 604800.0 :nodes 11}
+   :sweep {:param :thickness-m :values [0.15 0.20 0.25 0.30 0.35]}
+   :quantity :final-back-c
+   :limit {:max 250.0 :basis "estimate: shell reading above which a thin-lining hot spot is flagged for relining"}
+   :boundary {:lo 0.05 :hi 0.60}}
+  {:id :sampling-lance-handling
+   :kind :manipulator
+   :procedure "arm lifts a melt-sampling lance with its probe from the rack to the insertion guide"
+   :params {:l1-m 0.60 :l2-m 0.55 :m1-kg 8.0 :m2-kg 6.0
+            :from [0.70 0.10] :to [0.40 0.80] :duration-s 3.0 :steps 500}
+   :sweep {:param :payload-kg :values [1.0 2.0 4.0 6.0 8.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 150.0 :basis "estimate: continuous shoulder torque of an industrial arm (~10 kg payload class) at this reach"}
+   :boundary {:lo 0.1 :hi 40.0}}]}
